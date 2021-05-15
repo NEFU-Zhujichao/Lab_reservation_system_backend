@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.lab_reservation_system_backend_server.mapper.CourseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.lab_reservation_system_backend_server.pojo.Course">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="student_number" property="student_number" />
+        <result column="periods" property="periods" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, student_number, periods
+    </sql>
+
+</mapper>
