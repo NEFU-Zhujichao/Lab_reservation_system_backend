@@ -1,11 +1,14 @@
 package com.example.lab_reservation_system_backend_server.service;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.example.lab_reservation_system_backend_server.pojo.RespBean;
+import com.example.lab_reservation_system_backend_server.pojo.Role;
 import com.example.lab_reservation_system_backend_server.pojo.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.lab_reservation_system_backend_server.pojo.UserLoginObject;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -24,7 +27,7 @@ public interface IUserService extends IService<User> {
      * @param request
      * @return
      */
-    RespBean login(String username,String password,HttpServletRequest request);
+    RespBean login(String username,String password,String code,HttpServletRequest request);
 
     /**
      * 根据用户名获取用户
@@ -32,4 +35,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     User getUserByUsername(String username);
+
+    /**
+     * 根据用户id查询角色列表
+     * @param userId
+     * @return
+     */
+    List<Role> getRoles(Long userId);
 }

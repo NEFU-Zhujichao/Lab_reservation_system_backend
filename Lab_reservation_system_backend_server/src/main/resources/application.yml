@@ -6,7 +6,6 @@ spring:
     username: root
     password: root
 
-
 jwt:
   # JWT存储的请求头
   tokenHeader: Authorization
@@ -16,3 +15,11 @@ jwt:
   expiration: 18144000
   # JWT 负载中拿到开头
   tokenHead: Bearer
+
+logging:
+  level:
+    root: warn
+    com:
+      example: debug
+  pattern:
+    console: '%-5level %C.%M[%line] - %msg%n'

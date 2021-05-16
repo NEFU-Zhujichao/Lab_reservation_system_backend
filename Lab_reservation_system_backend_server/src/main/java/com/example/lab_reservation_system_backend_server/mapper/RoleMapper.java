@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -17,4 +19,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoleMapper extends BaseMapper<Role> {
 
+    /**
+     * 根据用户id查询角色列表
+     * @param userId
+     * @return
+     */
+    List<Role> getRoles(Long userId);
 }

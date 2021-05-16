@@ -2,7 +2,9 @@ package com.example.lab_reservation_system_backend_server.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.lab_reservation_system_backend_server.compoment.JwtTokenUtil;
+import com.example.lab_reservation_system_backend_server.mapper.RoleMapper;
 import com.example.lab_reservation_system_backend_server.pojo.RespBean;
+import com.example.lab_reservation_system_backend_server.pojo.Role;
 import com.example.lab_reservation_system_backend_server.pojo.User;
 import com.example.lab_reservation_system_backend_server.mapper.UserMapper;
 import com.example.lab_reservation_system_backend_server.pojo.UserLoginObject;
@@ -17,9 +19,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +42,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private UserMapper userMapper;
     @Autowired
+    private RoleMapper roleMapper;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -52,7 +58,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @return
      */
     @Override
-    public RespBean login(String username,String password,HttpServletRequest request) {
+    public RespBean login(String username,String password,String code,HttpServletRequest request) {
+        String captcha = (String) request.getSession().getAttribute("captcha");
+        if (StringUtils.isEmpty(code) || !captcha.equalsIgnoreCase(code)){
+            return RespBean.error(500,"验证码错误，请重新输入");
+        }
         // 登录
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (userDetails == null || !passwordEncoder.matches(password,userDetails.getPassword())){
@@ -78,5 +88,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public User getUserByUsername(String username) {
        return userMapper.selectOne(new QueryWrapper<User>().eq("username",username));
+    }
+
+    /**
+     * 根据用户id查询角色列表
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<Role> getRoles(Long userId) {
+        return roleMapper.getRoles(userId);
     }
 }

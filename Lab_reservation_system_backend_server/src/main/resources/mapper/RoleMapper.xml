@@ -13,4 +13,10 @@
         id, name
     </sql>
 
+    <!-- 根据用户id查询角色列表 -->
+    <select id="getRoles" resultType="com.example.lab_reservation_system_backend_server.pojo.Role">
+        select r.id,r.name
+        from role as r left join user_role as ur on r.id = ur.rid
+        where  ur.user_id = #{userId}
+    </select>
 </mapper>

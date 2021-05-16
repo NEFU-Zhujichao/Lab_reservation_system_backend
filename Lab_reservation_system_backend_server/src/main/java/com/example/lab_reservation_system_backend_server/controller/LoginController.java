@@ -23,7 +23,7 @@ public class LoginController {
     @ApiOperation(value = "登录之后返回token")
     @PostMapping("/login")
     public RespBean login(@RequestBody UserLoginObject userLoginObject,HttpServletRequest request){
-        return userService.login(userLoginObject.getUsername(),userLoginObject.getPassword(),request);
+        return userService.login(userLoginObject.getUsername(),userLoginObject.getPassword(),userLoginObject.getCode(),request);
     }
 
     @ApiOperation(value = "获取当前登录用户的信息")
@@ -35,6 +35,7 @@ public class LoginController {
         User user = userService.getUserByUsername(username);
         // 防止用户密码泄露，不需要将密码传到前端
         user.setPassword(null);
+        user.setRoles(userService.getRoles(user.getId()));
         return user;
     }
 

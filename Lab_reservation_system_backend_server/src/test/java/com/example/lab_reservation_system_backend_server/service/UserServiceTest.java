@@ -20,8 +20,8 @@ public class UserServiceTest {
     @Test
     public void test_addUser(){
         User user = new User();
-        user.setName("NEFU_Chao");
-        user.setUsername("admin");
+        user.setName("NEFU_Chao2");
+        user.setUsername("admin2");
         user.setPassword(passwordEncoder.encode("123"));
         userMapper.insert(user);
     }
