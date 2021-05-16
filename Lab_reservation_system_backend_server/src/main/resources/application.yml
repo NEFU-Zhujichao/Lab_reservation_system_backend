@@ -11,7 +11,7 @@ jwt:
   # JWT存储的请求头
   tokenHeader: Authorization
   # JWT 加密使用的密钥
-  secret: yebsecret
+  secret: lab-reservation
   # JWT的超期限时间(60 * 60 * 24 * 30)
   expiration: 18144000
   # JWT 负载中拿到开头
