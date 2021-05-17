@@ -56,4 +56,10 @@ public interface IUserService extends IService<User> {
      * @return
      */
     RespBean deleteUser(Long id);
+
+    /**
+     * 获取所有用户信息
+     * @return
+     */
+    RespBean getAllUsers(String role);
 }

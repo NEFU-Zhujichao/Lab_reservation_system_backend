@@ -114,7 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userMapper.insert(user);
             user.getRoles().forEach(role -> {
                 UserRole userRole = new UserRole();
-                userRole.setUser_id(user.getId());
+                userRole.setUserId(user.getId());
                 userRole.setRid(role.getId());
                 userRoleMapper.insert(userRole);
             });
@@ -138,5 +138,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }catch (Exception e){
             throw new RuntimeException("离职失败");
         }
+    }
+
+    /**
+     * 获取所有用户列表
+     * @return
+     */
+    @Override
+    public RespBean getAllUsers(String role) {
+        List<User> users = userMapper.getAllUsers(role);
+        if (users != null && users.size() > 0) return RespBean.success("查询成功",users);
+        return RespBean.error(500,"查询失败");
     }
 }

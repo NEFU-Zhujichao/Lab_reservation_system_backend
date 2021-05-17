@@ -29,12 +29,13 @@ public class UserController {
     private IUserService userService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    private String role = "TEACHER";
 
-    @ApiOperation(value = "查询教师信息")
+    @ApiOperation(value = "查询所有教师信息")
     @GetMapping("/")
     public RespBean listUsers(){
         if (UserUtils.hasAdminRole()){
-            return RespBean.success("查询成功",userService.list());
+            return userService.getAllUsers(role);
         }
         return RespBean.error(403,"无权限，请联系管理员");
     }
@@ -54,9 +55,6 @@ public class UserController {
     public RespBean deleteUser(@PathVariable Long id){
         if (UserUtils.hasAdminRole()){
             return userService.deleteUser(id);
-//            if (userService.removeById(id)){
-//                return RespBean.success("删除成功",null);
-//            }else return RespBean.error(500,"删除失败");
         }
         return RespBean.error(403,"无权限，请联系管理员");
     }

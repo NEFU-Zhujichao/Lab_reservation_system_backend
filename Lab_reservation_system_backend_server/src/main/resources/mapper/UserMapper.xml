@@ -4,15 +4,33 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.lab_reservation_system_backend_server.pojo.User">
-        <id column="id" property="id" />
-        <result column="username" property="username" />
-        <result column="password" property="password" />
-        <result column="name" property="name" />
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
     </resultMap>
 
+    <resultMap id="UsersWithRole" type="User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="name" property="name"/>
+        <collection property="roles" ofType="Role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+        </collection>
+    </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, username, password, name
+        id
+        , username, password, name
     </sql>
 
+    <select id="getAllUsers" resultMap="UsersWithRole">
+        select u.id, u.name, u.username, r.name as rname, r.id as rid
+        from user as u
+                 left join user_role as ur on u.id = ur.user_id
+                 left join role as r on ur.rid = r.id
+        where r.name = #{role}
+        order by u.id
+    </select>
 </mapper>

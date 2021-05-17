@@ -1,7 +1,7 @@
 package com.example.lab_reservation_system_backend_server.mapper;
 
-import com.example.lab_reservation_system_backend_server.pojo.Experiment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.lab_reservation_system_backend_server.pojo.Lab;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Repository;
  */
 @Mapper
 @Repository
-public interface ExperimentMapper extends BaseMapper<Experiment> {
+public interface LabMapper extends BaseMapper<Lab> {
 
 }

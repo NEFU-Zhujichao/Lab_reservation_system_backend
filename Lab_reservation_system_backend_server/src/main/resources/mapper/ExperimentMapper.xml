@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.lab_reservation_system_backend_server.mapper.ExperimentMapper">
+<mapper namespace="com.example.lab_reservation_system_backend_server.mapper.LabMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.example.lab_reservation_system_backend_server.pojo.Experiment">
+    <resultMap id="BaseResultMap" type="com.example.lab_reservation_system_backend_server.pojo.Lab">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="number" property="number" />

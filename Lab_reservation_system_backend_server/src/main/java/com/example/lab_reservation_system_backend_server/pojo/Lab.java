@@ -18,18 +18,22 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="Experiment对象", description="")
-public class Experiment implements Serializable {
+@ApiModel(value="Lab对象", description="")
+public class Lab implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty(value = "id")
     private Long id;
 
+    @ApiModelProperty(value = "实验室编号")
     private String name;
 
+    @ApiModelProperty(value = "实验室机器数量")
     private Long number;
 
+    @ApiModelProperty(value = "实验室详细描述")
     private String detail;
 
 

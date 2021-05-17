@@ -8,6 +8,16 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
+# Mybatis-plus配置
+mybatis-plus:
+  #配置Mapper映射文件
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  # 配置MyBatis数据返回类型别名（默认别名是类名）
+  type-aliases-package: com.example.lab_reservation_system_backend_server.pojo
+  configuration:
+    # 自动驼峰命名
+    map-underscore-to-camel-case: false
+
 jwt:
   # JWT存储的请求头
   tokenHeader: Authorization

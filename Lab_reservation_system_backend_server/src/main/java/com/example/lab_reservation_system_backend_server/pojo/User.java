@@ -52,6 +52,7 @@ public class User implements Serializable, UserDetails {
     @TableField(exist = false)
     private List<Role> roles;
 
+    @ApiModelProperty(value = "权限")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -61,21 +62,25 @@ public class User implements Serializable, UserDetails {
         return authorities;
     }
 
+    @ApiModelProperty(value = "账户是否没过期")
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @ApiModelProperty(value = "账户是否没锁定")
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @ApiModelProperty(value = "凭证是否没过期")
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @ApiModelProperty(value = "账户是否没禁用")
     @Override
     public boolean isEnabled() {
         // 默认情况下所有用户均未被禁用

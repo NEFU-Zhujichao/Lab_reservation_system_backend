@@ -1,8 +1,11 @@
 package com.example.lab_reservation_system_backend_server.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -24,13 +27,16 @@ public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty(value = "id")
     private Long id;
 
+    @ApiModelProperty(value = "实验课程名称")
     private String name;
 
-    private Integer student_number;
+    @ApiModelProperty(value = "实验课程学生数")
+    private Integer studentNumber;
 
+    @ApiModelProperty(value = "实验课时")
     private Integer periods;
-
 
 }

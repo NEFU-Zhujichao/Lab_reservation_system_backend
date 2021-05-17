@@ -26,10 +26,13 @@ public class UserRole implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty(value = "id")
     private Long id;
 
-    private Long user_id;
+    @ApiModelProperty(value = "用户id")
+    private Long userId;
 
+    @ApiModelProperty(value = "角色id")
     private Long rid;
 
 

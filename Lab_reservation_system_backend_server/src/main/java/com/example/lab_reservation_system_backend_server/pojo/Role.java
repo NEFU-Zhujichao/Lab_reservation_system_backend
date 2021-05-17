@@ -24,8 +24,10 @@ public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty(value = "id")
     private Long id;
 
+    @ApiModelProperty(value = "角色昵称")
     private String name;
 
 
