@@ -4,13 +4,13 @@
 - JDK11
 - SpringBoot 2.4.5 MySQL 8.0.23
 - mybatis-plus 3.4.2 SpringSecurity 2.4.5
-- knife4j-spring-boot-starter 3.0.0 国人编写的漂亮的ui界面的Swagger
+- knife4j-spring-boot-starter 3.0.2 国人编写的漂亮的ui界面的Swagger
 ---
 ### 2021/5/12
 - 设计数据库表。
 - 使用代码生成器快速生成 Pojo、Mapper、Mapper XML、Service、Controller 等各个模块的代码，极大的提升了开发效率。
 ### 2021/5/15
-> 前后端约定好jwt格式 Bearer token
+> 登录成功后返回tokenMap，前端根据tokenMap的tokenHead以及token和约定好的jwt格式来拼接token eg：Bearer token
 1. 编写token工具类。
    - 根据用户信息生成token
    - 从token中获取用户名
@@ -29,13 +29,16 @@
 6. try with resources 自动关闭资源。将要关闭的资源放在try语句内，在try语句执行完后自动关闭资源。
 
 ~~**由于在swagger文档中勾选了使用bootstrap增强功能，导致1.9.6下的文档不能正确显示api接口信息。找了网上很多博客也还没有解决这个问题。暂时先把版本降到1.8.3，随之而来的问题就是验证码controller又变成了乱码，不能正确显示图片。不过在后台日志中还可以看到验证码，暂时不影响后续功能实现，等后期再解决一下这个问题。**~~
+
 7. 实现根据用户id查询用户角色功能，完善登录逻辑。
 8. 通过原生作者的gitee解决了上述问题。现在该项目已经和springboot整合，有了自己的启动器(starter)：knife4j-spring-boot-starter。引入新依赖后，问题全部解决。**通过此次排错的过程深深体会到去官网的重要性！**  
 [下面贴一下他的gitee](https://gitee.com/xiaoym/swagger-bootstrap-ui-demo/tree/master)
 ```xml
 <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>3.0.2</version>
-        </dependency>
+   <groupId>com.github.xiaoymin</groupId>
+   <artifactId>knife4j-spring-boot-starter</artifactId>
+   <version>3.0.2</version>
+</dependency>
 ```
+### 2021/5/17
+1. 完成教师信息的CURD。

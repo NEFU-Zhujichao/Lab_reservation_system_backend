@@ -42,4 +42,18 @@ public interface IUserService extends IService<User> {
      * @return
      */
     List<Role> getRoles(Long userId);
+
+    /**
+     * 添加教师信息
+     * @param user
+     * @return
+     */
+    RespBean addUser(User user);
+
+    /**
+     * 教师离职
+     * @param id
+     * @return
+     */
+    RespBean deleteUser(Long id);
 }

@@ -3,14 +3,11 @@ package com.example.lab_reservation_system_backend_server.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.lab_reservation_system_backend_server.compoment.JwtTokenUtil;
 import com.example.lab_reservation_system_backend_server.mapper.RoleMapper;
-import com.example.lab_reservation_system_backend_server.pojo.RespBean;
-import com.example.lab_reservation_system_backend_server.pojo.Role;
-import com.example.lab_reservation_system_backend_server.pojo.User;
+import com.example.lab_reservation_system_backend_server.mapper.UserRoleMapper;
+import com.example.lab_reservation_system_backend_server.pojo.*;
 import com.example.lab_reservation_system_backend_server.mapper.UserMapper;
-import com.example.lab_reservation_system_backend_server.pojo.UserLoginObject;
 import com.example.lab_reservation_system_backend_server.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.lab_reservation_system_backend_server.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +33,7 @@ import java.util.Map;
  * @since 2021-05-15
  */
 @Service
+@Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
@@ -43,6 +42,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private UserMapper userMapper;
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -74,9 +75,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         // 生成token
         String token = jwtTokenUtil.generateToken(userDetails);
-        Map<String,String> tokenMap = new HashMap<>();
+        Map<String,Object> tokenMap = new HashMap<>();
         tokenMap.put("token",token);
         tokenMap.put("tokenHead",tokenHead);
+        // 把用户拥有的角色一同返回给前端，供前端使用
+        tokenMap.put("roles",userDetails.getAuthorities());
         return RespBean.success("登录成功",tokenMap);
     }
 
@@ -98,5 +101,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public List<Role> getRoles(Long userId) {
         return roleMapper.getRoles(userId);
+    }
+
+    /**
+     * 添加教师信息
+     * @param user
+     * @return
+     */
+    @Override
+    public RespBean addUser(User user) {
+        try {
+            userMapper.insert(user);
+            user.getRoles().forEach(role -> {
+                UserRole userRole = new UserRole();
+                userRole.setUser_id(user.getId());
+                userRole.setRid(role.getId());
+                userRoleMapper.insert(userRole);
+            });
+            return RespBean.success("添加成功",null);
+        }catch (Exception e){
+            throw new RuntimeException("添加失败");
+        }
+    }
+
+    /**
+     * 教师离职
+     * @param id
+     * @return
+     */
+    @Override
+    public RespBean deleteUser(Long id) {
+        try {
+            userMapper.deleteById(id);
+            userRoleMapper.delete(new QueryWrapper<UserRole>().eq("user_id",id));
+            return RespBean.success("离职成功",null);
+        }catch (Exception e){
+            throw new RuntimeException("离职失败");
+        }
     }
 }
