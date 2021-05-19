@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -38,5 +39,8 @@ public class Course implements Serializable {
 
     @ApiModelProperty(value = "实验课时")
     private Integer periods;
+
+    @ApiModelProperty(value = "授课教师id")
+    private Long uid;
 
 }

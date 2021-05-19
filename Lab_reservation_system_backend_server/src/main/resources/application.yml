@@ -16,7 +16,7 @@ mybatis-plus:
   type-aliases-package: com.example.lab_reservation_system_backend_server.pojo
   configuration:
     # 自动驼峰命名
-    map-underscore-to-camel-case: false
+    map-underscore-to-camel-case: true
 
 jwt:
   # JWT存储的请求头

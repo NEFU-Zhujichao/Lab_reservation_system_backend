@@ -10,9 +10,34 @@
         <result column="periods" property="periods" />
     </resultMap>
 
+    <resultMap id="AllCourses" type="com.example.lab_reservation_system_backend_server.dto.TeacherDTO">
+        <association property="user" javaType="com.example.lab_reservation_system_backend_server.pojo.User">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="username" column="username" />
+        </association>
+        <collection property="courses" ofType="Course">
+            <id property="id" column="cid" />
+            <result property="name" column="cname" />
+            <result property="periods" column="cperiods" />
+            <result property="studentNumber" column="cstudent_number" />
+        </collection>
+    </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, name, student_number, periods
     </sql>
 
+    <!-- 查询全部实验课程信息 -->
+    <select id="getAllCourses" resultType="com.example.lab_reservation_system_backend_server.dto.TeacherDTO" resultMap="AllCourses">
+        select u.id,
+               u.name,
+               u.username,
+               c.name           as cname,
+               c.id             as cid,
+               c.periods        as cperiods,
+               c.student_number as cstudent_number
+        from course c
+                 left join user u on c.uid = u.id
+    </select>
 </mapper>

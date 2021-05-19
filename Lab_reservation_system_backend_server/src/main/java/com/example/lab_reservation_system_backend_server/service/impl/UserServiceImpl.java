@@ -51,6 +51,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private JwtTokenUtil jwtTokenUtil;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+    @Value("${jwt.tokenHeader}")
+    private String tokenHeader;
 
     /**
      * 登录之后返回token
@@ -84,6 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Map<String,Object> tokenMap = new HashMap<>();
         tokenMap.put("token",token);
         tokenMap.put("tokenHead",tokenHead);
+        tokenMap.put("tokenHeader",tokenHeader);
         // 把用户拥有的角色一同返回给前端，供前端使用
         tokenMap.put("roles",userDetails.getAuthorities());
         return RespBean.success("登录成功",tokenMap);
