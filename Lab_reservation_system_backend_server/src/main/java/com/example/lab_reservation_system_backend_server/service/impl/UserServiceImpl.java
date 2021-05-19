@@ -8,6 +8,7 @@ import com.example.lab_reservation_system_backend_server.pojo.*;
 import com.example.lab_reservation_system_backend_server.mapper.UserMapper;
 import com.example.lab_reservation_system_backend_server.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,9 +65,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (StringUtils.isEmpty(code) || !captcha.equalsIgnoreCase(code)){
             return RespBean.error(500,"验证码错误，请重新输入");
         }
-        // 登录
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if (userDetails == null || !passwordEncoder.matches(password,userDetails.getPassword())){
+        UserDetails userDetails;
+        try {
+            // 登录
+            userDetails = userDetailsService.loadUserByUsername(username);
+            if (userDetails == null || !passwordEncoder.matches(password,userDetails.getPassword())){
+                return RespBean.error(500,"用户名或密码错误");
+            }
+        } catch (Exception e){
             return RespBean.error(500,"用户名或密码错误");
         }
         //更新security登录用户对象

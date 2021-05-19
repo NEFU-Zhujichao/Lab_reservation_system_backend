@@ -30,6 +30,8 @@ public class Appointment implements Serializable {
 
     private Long cid;
 
+    private Long lid;
+
     private Integer week;
 
     private Integer day;
