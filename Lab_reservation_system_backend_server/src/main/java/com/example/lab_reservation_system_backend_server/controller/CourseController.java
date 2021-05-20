@@ -3,6 +3,7 @@ package com.example.lab_reservation_system_backend_server.controller;
 import com.example.lab_reservation_system_backend_server.pojo.Course;
 import com.example.lab_reservation_system_backend_server.pojo.RespBean;
 import com.example.lab_reservation_system_backend_server.service.ICourseService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/course")
+@Api(tags = "实验课程Controller")
 public class CourseController {
 
     @Autowired

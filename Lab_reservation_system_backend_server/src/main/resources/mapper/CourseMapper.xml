@@ -11,17 +11,18 @@
     </resultMap>
 
     <resultMap id="AllCourses" type="com.example.lab_reservation_system_backend_server.dto.TeacherDTO">
-        <association property="user" javaType="com.example.lab_reservation_system_backend_server.pojo.User">
+<!--        <association property="user" javaType="com.example.lab_reservation_system_backend_server.pojo.User">-->
             <id property="id" column="id" />
             <result property="name" column="name" />
             <result property="username" column="username" />
-        </association>
-        <collection property="courses" ofType="Course">
-            <id property="id" column="cid" />
-            <result property="name" column="cname" />
-            <result property="periods" column="cperiods" />
-            <result property="studentNumber" column="cstudent_number" />
-        </collection>
+<!--        </association>-->
+        <collection property="courses" ofType="Course" columnPrefix="c" autoMapping="true" />
+<!--        <collection property="courses" ofType="Course">-->
+<!--            <id property="id" column="cid" />-->
+<!--            <result property="name" column="cname" />-->
+<!--            <result property="periods" column="cperiods" />-->
+<!--            <result property="studentNumber" column="cstudent_number" />-->
+<!--        </collection>-->
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">

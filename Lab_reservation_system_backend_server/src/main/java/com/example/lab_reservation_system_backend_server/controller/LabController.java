@@ -30,19 +30,25 @@ public class LabController {
 
     @ApiOperation(value = "查询所有实验室信息")
     @GetMapping("/")
-    public RespBean getAllExperiments(){
+    public RespBean getAllLabs(){
         if (UserUtils.hasAdminRole()){
-            List<Lab> experiments = labService.list();
-            if (experiments != null && experiments.size() > 0){
-                return RespBean.success("查询成功",experiments);
+            List<Lab> labs = labService.list();
+            if (labs != null && labs.size() > 0){
+                return RespBean.success("查询成功",labs);
             }else return RespBean.error(500,"没有任何实验室信息");
         }
         return RespBean.error(403,"无权限，请联系管理员");
     }
 
+    @ApiOperation(value = "基于课程id查询实验室信息")
+    @GetMapping("/{id}")
+    public RespBean getLabById(@PathVariable Long id){
+        return labService.getLabById(id);
+    }
+
     @ApiOperation(value = "增添实验室信息")
     @PostMapping("/")
-    public RespBean addExperiment(@RequestBody Lab lab){
+    public RespBean addLab(@RequestBody Lab lab){
         if (UserUtils.hasAdminRole()){
             if (labService.save(lab)){
                 return RespBean.success("添加成功",null);
@@ -53,7 +59,7 @@ public class LabController {
 
     @ApiOperation(value = "修改实验室信息")
     @PutMapping("/")
-    public RespBean updateExperiment(@RequestBody Lab lab){
+    public RespBean updateLab(@RequestBody Lab lab){
         if (UserUtils.hasAdminRole()){
             if (labService.updateById(lab)){
                 return RespBean.success("修改成功",null);
@@ -64,7 +70,7 @@ public class LabController {
 
     @ApiOperation(value = "删除实验室信息")
     @DeleteMapping("/{id}")
-    public RespBean deleteExperiment(@PathVariable Long id){
+    public RespBean deleteLab(@PathVariable Long id){
         if (UserUtils.hasAdminRole()){
             if (labService.removeById(id)){
                 return RespBean.success("删除成功",null);
