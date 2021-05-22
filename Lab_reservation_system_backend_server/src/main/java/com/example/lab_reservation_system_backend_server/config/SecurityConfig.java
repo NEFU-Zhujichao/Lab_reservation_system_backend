@@ -31,8 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
-                "/login",
-                "/logout",
+                "/api/login",
+                "/api/logout",
                 "/css/**",
                 "/js/**",
                 "/index.html",
@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/webjars/**",
                 "/swagger-resources/**",
                 "/v2/api-docs/**",
-                "/captcha",
+                "/api/captcha",
                 "/swagger-ui.html"
         );
     }
