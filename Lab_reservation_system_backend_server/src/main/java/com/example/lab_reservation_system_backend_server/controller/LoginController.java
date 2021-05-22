@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@Api(tags = "LoginController")
+@RequestMapping("/api")
+@Api(tags = "登录Controller")
 public class LoginController {
 
     @Autowired
