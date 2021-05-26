@@ -156,7 +156,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public RespBean getAllUsers(String role) {
         List<User> users = userMapper.getAllUsers(role);
-        if (users != null && users.size() > 0) return RespBean.success("查询成功",users);
+        if (users != null && users.size() > 0) return RespBean.success(null,users);
         return RespBean.error(500,"查询失败");
     }
 }

@@ -73,7 +73,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         teacherDTO.setName(user.getName());
         //teacherDTO.setUser(user);
         if (teacherDTO != null)
-        return RespBean.success("查询成功",teacherDTO);
+        return RespBean.success(null,teacherDTO);
         return RespBean.error(500,"查询失败");
     }
 

@@ -10,6 +10,9 @@ spring:
 
 # Mybatis-plus配置
 mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
   #配置Mapper映射文件
   mapper-locations: classpath*:/mapper/*Mapper.xml
   # 配置MyBatis数据返回类型别名（默认别名是类名）

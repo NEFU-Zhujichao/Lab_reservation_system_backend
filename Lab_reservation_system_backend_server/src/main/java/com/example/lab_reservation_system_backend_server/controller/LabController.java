@@ -34,7 +34,7 @@ public class LabController {
         if (UserUtils.hasAdminRole()){
             List<Lab> labs = labService.list();
             if (labs != null && labs.size() > 0){
-                return RespBean.success("查询成功",labs);
+                return RespBean.success(null,labs);
             }else return RespBean.error(500,"没有任何实验室信息");
         }
         return RespBean.error(403,"无权限，请联系管理员");

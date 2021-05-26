@@ -35,6 +35,7 @@
                u.name,
                u.username,
                c.name           as cname,
+               c.uid            as cuid,
                c.id             as cid,
                c.periods        as cperiods,
                c.student_number as cstudent_number
