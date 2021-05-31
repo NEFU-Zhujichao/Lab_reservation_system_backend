@@ -33,4 +33,11 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     RespBean getAllCourses();
+
+    /**
+     * 根据课程id查询实验课程
+     * @param id
+     * @return
+     */
+    RespBean getCourseById(Long id);
 }

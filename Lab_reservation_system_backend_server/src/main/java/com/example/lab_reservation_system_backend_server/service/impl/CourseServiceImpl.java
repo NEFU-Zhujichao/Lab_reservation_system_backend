@@ -89,4 +89,18 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         return RespBean.error(500,"查询失败");
     }
+
+    /**
+     * 根据课程id查询实验课程
+     * @param id
+     * @return
+     */
+    @Override
+    public RespBean getCourseById(Long id) {
+        Course course = courseMapper.selectOne(new QueryWrapper<Course>().eq("id", id));
+        if (course != null){
+            return RespBean.success(null,course);
+        }
+        return RespBean.error(500,"没有该门课程");
+    }
 }

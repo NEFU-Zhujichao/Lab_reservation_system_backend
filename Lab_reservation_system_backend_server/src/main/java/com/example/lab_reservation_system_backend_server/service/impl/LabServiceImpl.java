@@ -41,7 +41,7 @@ public class LabServiceImpl extends ServiceImpl<LabMapper, Lab> implements ILabS
         if (course != null){
             List<Lab> labs = labMapper.selectList(new QueryWrapper<Lab>().ge("number", course.getStudentNumber()));
             if (labs != null && labs.size() > 0){
-                return RespBean.success("查询成功",labs);
+                return RespBean.success("已成功过滤实验室机器数小于课程人数的实验室",labs);
             }
             return RespBean.error(500,"暂时没有能容纳该门实验课程学生数的实验室");
         }

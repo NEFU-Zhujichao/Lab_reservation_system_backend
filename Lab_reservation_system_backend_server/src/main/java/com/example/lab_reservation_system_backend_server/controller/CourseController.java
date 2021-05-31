@@ -25,7 +25,7 @@ public class CourseController {
     private ICourseService courseService;
 
     @ApiOperation(value = "根据教师id查询实验课程")
-    @GetMapping("/{id}")
+    @GetMapping("/teacher/{id}")
     public RespBean getCoursesByTeacherId(@PathVariable Long id){
         return courseService.getCoursesByTeacherId(id);
     }
@@ -34,6 +34,12 @@ public class CourseController {
     @GetMapping("/")
     public RespBean getAllCourses(){
         return courseService.getAllCourses();
+    }
+
+    @ApiOperation(value = "根据课程id查询实验课程")
+    @GetMapping("/{id}")
+    public RespBean getCourseById(@PathVariable Long id){
+        return courseService.getCourseById(id);
     }
 
     @ApiOperation(value = "添加实验课程")

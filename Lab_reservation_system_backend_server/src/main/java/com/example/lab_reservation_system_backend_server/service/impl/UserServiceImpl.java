@@ -120,6 +120,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public RespBean addUser(User user) {
         try {
+            log.debug(String.valueOf(user));
             userMapper.insert(user);
             user.getRoles().forEach(role -> {
                 UserRole userRole = new UserRole();

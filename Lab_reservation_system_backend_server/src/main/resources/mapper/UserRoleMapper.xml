@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.lab_reservation_system_backend_server.pojo.UserRole">
         <id column="id" property="id" />
-        <result column="user_id" property="user_id" />
+        <result column="user_id" property="userId" />
         <result column="rid" property="rid" />
     </resultMap>
 

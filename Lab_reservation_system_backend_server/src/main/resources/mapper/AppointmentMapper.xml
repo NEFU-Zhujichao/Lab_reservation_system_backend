@@ -6,15 +6,15 @@
     <resultMap id="BaseResultMap" type="com.example.lab_reservation_system_backend_server.pojo.Appointment">
         <id column="id" property="id" />
         <result column="uid" property="uid" />
+        <result column="uname" property="uname" />
         <result column="cid" property="cid" />
-        <result column="week" property="week" />
-        <result column="day" property="day" />
-        <result column="section" property="section" />
+        <result column="cname" property="cname" />
+        <result column="lab_name" property="labName" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, uid, cid, week, day, section
+        id, uid, uname, cid, cname, lab_name
     </sql>
 
 </mapper>

@@ -27,4 +27,5 @@ public interface IAppointmentService extends IService<Appointment> {
      * @return
      */
     RespBean orderLab(Appointment appointment);
+
 }
