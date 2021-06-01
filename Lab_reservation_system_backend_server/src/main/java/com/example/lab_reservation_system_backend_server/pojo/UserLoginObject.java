@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "UserLogin对象")
+@ApiModel(value = "用户登录对象",description = "")
 public class UserLoginObject {
 
     @ApiModelProperty(value = "用户名",required = true)

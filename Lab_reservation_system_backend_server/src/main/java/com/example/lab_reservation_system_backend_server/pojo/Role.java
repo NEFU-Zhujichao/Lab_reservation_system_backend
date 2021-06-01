@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="Role对象", description="")
+@ApiModel(value="角色对象", description="")
 public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;

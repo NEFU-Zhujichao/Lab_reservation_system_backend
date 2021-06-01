@@ -1,5 +1,6 @@
 package com.example.lab_reservation_system_backend_server.pojo;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(value = "预约时间对象",description = "")
 public class ReservationTime implements Serializable {
 
     private static final long serialVersionUID = 1L;

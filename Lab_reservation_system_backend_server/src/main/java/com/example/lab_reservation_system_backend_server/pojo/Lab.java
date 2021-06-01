@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="Lab对象", description="")
+@ApiModel(value="实验室对象", description="")
 public class Lab implements Serializable {
 
     private static final long serialVersionUID = 1L;
