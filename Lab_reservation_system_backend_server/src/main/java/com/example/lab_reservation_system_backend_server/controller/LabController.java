@@ -8,8 +8,12 @@ import com.example.lab_reservation_system_backend_server.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,13 +31,20 @@ public class LabController {
 
     @Autowired
     private ILabService labService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @ApiOperation(value = "查询所有实验室信息")
     @GetMapping("/")
     public RespBean getAllLabs(){
         if (UserUtils.hasAdminRole()){
-            List<Lab> labs = labService.list();
-            if (labs != null && labs.size() > 0){
+            ValueOperations valueOperations = redisTemplate.opsForValue();
+            List<Lab> labs = (List<Lab>) valueOperations.get("labs");
+            if(CollectionUtils.isEmpty(labs)){
+                labs = labService.list();
+            }
+            if (!CollectionUtils.isEmpty(labs)){
+                valueOperations.set("labs",labs);
                 return RespBean.success(null,labs);
             }else return RespBean.error(500,"没有任何实验室信息");
         }
@@ -51,6 +62,7 @@ public class LabController {
     public RespBean addLab(@RequestBody Lab lab){
         if (UserUtils.hasAdminRole()){
             if (labService.save(lab)){
+                redisTemplate.delete("labs");
                 return RespBean.success("添加成功",null);
             }else return RespBean.error(500,"添加失败");
         }
@@ -62,6 +74,7 @@ public class LabController {
     public RespBean updateLab(@RequestBody Lab lab){
         if (UserUtils.hasAdminRole()){
             if (labService.updateById(lab)){
+                redisTemplate.delete("labs");
                 return RespBean.success("修改成功",null);
             }else return RespBean.error(500,"修改失败");
         }
@@ -73,6 +86,7 @@ public class LabController {
     public RespBean deleteLab(@PathVariable Long id){
         if (UserUtils.hasAdminRole()){
             if (labService.removeById(id)){
+                redisTemplate.delete("labs");
                 return RespBean.success("删除成功",null);
             }else return RespBean.error(500,"删除失败");
         }

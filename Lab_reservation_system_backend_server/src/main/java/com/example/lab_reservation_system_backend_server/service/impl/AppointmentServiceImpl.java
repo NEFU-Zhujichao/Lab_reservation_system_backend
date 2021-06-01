@@ -14,8 +14,11 @@ import com.example.lab_reservation_system_backend_server.service.IReservationTim
 import com.example.lab_reservation_system_backend_server.util.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -38,6 +41,8 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
     private CourseMapper courseMapper;
     @Autowired
     private ReservationTimeMapper reservationTimeMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 基于实验室名字查询实验室预约情况
@@ -46,8 +51,12 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
      */
     @Override
     public RespBean getAppointmentsByName(String name) {
-        List<Appointment> appointments = appointmentMapper.selectList(new QueryWrapper<Appointment>().eq("lab_name", name));
-        if (appointments != null && appointments.size() > 0){
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        List<Appointment> appointments = (List<Appointment>) valueOperations.get("AppointmentsByLab:"+name);
+        if (CollectionUtils.isEmpty(appointments)){
+            appointments = appointmentMapper.selectList(new QueryWrapper<Appointment>().eq("lab_name", name));
+        }
+        if (!CollectionUtils.isEmpty(appointments)){
             appointments.forEach(appointment -> {
                 List<ReservationTime> reservationTimes = reservationTimeMapper.selectList(new QueryWrapper<ReservationTime>()
                         .eq("uid",appointment.getUid())
@@ -55,6 +64,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
                         .eq("lab_name",appointment.getLabName()));
                 appointment.setReservationTimes(reservationTimes);
             });
+            valueOperations.set("AppointmentsByLab:"+name,appointments);
             return RespBean.success("查询成功",appointments);
         }
         return RespBean.success("没有任何预约记录",null);
@@ -86,6 +96,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
           }
             );
             appointmentMapper.insert(appointment);
+            redisTemplate.delete("AppointmentsByLab:"+appointment.getLabName());
             return RespBean.success("预约成功",null);
         }catch (Exception e){
             return RespBean.error(500,"预约失败");

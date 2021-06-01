@@ -23,7 +23,6 @@ public class UserUtils {
         long count = getCurrentUser().getRoles().stream()
                 .filter(role -> "ADMIN".equals(role.getName()))
                 .count();
-        log.debug("{}",count);
         return count > 0;
     }
 }

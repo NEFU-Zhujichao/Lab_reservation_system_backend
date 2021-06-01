@@ -7,6 +7,10 @@ spring:
     password: root
   jackson:
     default-property-inclusion: non_null
+  # redis配置
+  redis:
+    host: 122.9.46.43
+    password: zsq201017
 
 # Mybatis-plus配置
 mybatis-plus:

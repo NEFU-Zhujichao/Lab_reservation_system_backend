@@ -12,8 +12,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.lab_reservation_system_backend_server.util.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -34,6 +37,10 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     private CourseMapper courseMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private ICourseService courseService;
 
     /**
      * 添加实验课程
@@ -43,9 +50,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public RespBean addCourse(Course course) {
         try {
-            log.debug("{}",UserUtils.getCurrentUser().getId());
             course.setUid(UserUtils.getCurrentUser().getId());
             if (courseMapper.insert(course) > 0){
+                redisTemplate.delete("courses");
                 return RespBean.success("添加成功",null);
             }else {
                 course.setUid(null);
@@ -63,18 +70,24 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
      */
     @Override
     public RespBean getCoursesByTeacherId(Long id) {
-        log.debug("{}",UserUtils.getCurrentUser().getId());
-        List<Course> courses = courseMapper.selectList(new QueryWrapper<Course>().eq("uid", id));
-        User user = userMapper.selectOne(new QueryWrapper<User>().eq("id", id));
-        TeacherDTO teacherDTO = new TeacherDTO();
-        teacherDTO.setCourses(courses);
-        teacherDTO.setId(user.getId());
-        teacherDTO.setUsername(user.getUsername());
-        teacherDTO.setName(user.getName());
-        //teacherDTO.setUser(user);
-        if (teacherDTO != null)
-        return RespBean.success(null,teacherDTO);
-        return RespBean.error(500,"查询失败");
+        try {
+            ValueOperations valueOperations = redisTemplate.opsForValue();
+            List<Course> courses = (List<Course>) valueOperations.get("CoursesByTeacher:"+id);
+            if (CollectionUtils.isEmpty(courses)){
+                courses = courseMapper.selectList(new QueryWrapper<Course>().eq("uid", id));
+                valueOperations.set("CoursesByTeacher:"+id,courses);
+            }
+            TeacherDTO teacherDTO = new TeacherDTO();
+            teacherDTO.setCourses(courses);
+            teacherDTO.setId(UserUtils.getCurrentUser().getId());
+            teacherDTO.setUsername(UserUtils.getCurrentUser().getUsername());
+            teacherDTO.setName(UserUtils.getCurrentUser().getName());
+            if (teacherDTO != null)
+                return RespBean.success(null,teacherDTO);
+            return RespBean.error(500,"查询失败");
+        }catch (Exception e){
+            return RespBean.error(500,"查询失败");
+        }
     }
 
     /**
@@ -83,8 +96,13 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
      */
     @Override
     public RespBean getAllCourses() {
-        List<TeacherDTO> teacherDTOS = courseMapper.getAllCourses();
-        if (teacherDTOS != null && teacherDTOS.size() > 0){
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        List<TeacherDTO> teacherDTOS = (List<TeacherDTO>) valueOperations.get("courses");
+        if (CollectionUtils.isEmpty(teacherDTOS)){
+            teacherDTOS = courseMapper.getAllCourses();
+        }
+        if (!CollectionUtils.isEmpty(teacherDTOS)){
+            valueOperations.set("courses",teacherDTOS);
             return RespBean.success("查询成功",teacherDTOS);
         }
         return RespBean.error(500,"查询失败");
@@ -97,8 +115,13 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
      */
     @Override
     public RespBean getCourseById(Long id) {
-        Course course = courseMapper.selectOne(new QueryWrapper<Course>().eq("id", id));
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        Course course = (Course) valueOperations.get("course:"+id);
+        if(course == null){
+            course = courseMapper.selectOne(new QueryWrapper<Course>().eq("id", id));
+        }
         if (course != null){
+            valueOperations.set("course:"+id,course);
             return RespBean.success(null,course);
         }
         return RespBean.error(500,"没有该门课程");

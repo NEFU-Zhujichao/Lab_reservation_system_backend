@@ -6,6 +6,7 @@ import com.example.lab_reservation_system_backend_server.service.ICourseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -23,6 +24,8 @@ public class CourseController {
 
     @Autowired
     private ICourseService courseService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @ApiOperation(value = "根据教师id查询实验课程")
     @GetMapping("/teacher/{id}")
@@ -52,6 +55,7 @@ public class CourseController {
     @DeleteMapping(value = "/{id}")
     public RespBean deleteCourse(@PathVariable Long id){
         if (courseService.removeById(id)){
+            redisTemplate.delete("courses");
             return RespBean.success("删除成功",null);
         }
         return RespBean.error(500,"删除失败");
@@ -61,6 +65,7 @@ public class CourseController {
     @PutMapping(value = "/")
     public RespBean updateCourse(@RequestBody Course course){
         if (courseService.updateById(course)){
+            redisTemplate.delete("courses");
             return RespBean.success("修改成功",null);
         }
         return RespBean.error(500,"修改失败");

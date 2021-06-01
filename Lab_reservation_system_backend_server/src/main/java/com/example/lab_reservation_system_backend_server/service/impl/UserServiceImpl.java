@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +50,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private UserRoleMapper userRoleMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Value("${jwt.tokenHead}")
@@ -120,7 +125,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public RespBean addUser(User user) {
         try {
-            log.debug(String.valueOf(user));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userMapper.insert(user);
             user.getRoles().forEach(role -> {
                 UserRole userRole = new UserRole();
@@ -128,6 +133,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 userRole.setRid(role.getId());
                 userRoleMapper.insert(userRole);
             });
+            redisTemplate.delete("users");
             return RespBean.success("添加成功",null);
         }catch (Exception e){
             throw new RuntimeException("添加失败");
@@ -144,6 +150,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         try {
             userMapper.deleteById(id);
             userRoleMapper.delete(new QueryWrapper<UserRole>().eq("user_id",id));
+            redisTemplate.delete("users");
             return RespBean.success("离职成功",null);
         }catch (Exception e){
             throw new RuntimeException("离职失败");
@@ -156,8 +163,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      */
     @Override
     public RespBean getAllUsers(String role) {
-        List<User> users = userMapper.getAllUsers(role);
-        if (users != null && users.size() > 0) return RespBean.success(null,users);
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        List<User> users = (List<User>) valueOperations.get("users");
+        if (CollectionUtils.isEmpty(users)){
+            users = userMapper.getAllUsers(role);
+        }
+        if (!CollectionUtils.isEmpty(users)){
+            valueOperations.set("users",users);
+            return RespBean.success(null,users);
+        }
         return RespBean.error(500,"查询失败");
     }
 }

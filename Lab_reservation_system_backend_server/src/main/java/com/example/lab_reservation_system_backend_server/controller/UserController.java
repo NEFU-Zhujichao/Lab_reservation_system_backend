@@ -9,6 +9,7 @@ import com.example.lab_reservation_system_backend_server.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private RedisTemplate redisTemplate;
     private String role = "TEACHER";
 
     @ApiOperation(value = "查询所有教师信息")
@@ -44,7 +45,6 @@ public class UserController {
     @PostMapping("/")
     public RespBean addUser(@RequestBody User user){
         if (UserUtils.hasAdminRole()){
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
            return userService.addUser(user);
         }
         return RespBean.error(403,"无权限，请联系管理员");
@@ -64,6 +64,7 @@ public class UserController {
     public RespBean updateUser(@RequestBody User user){
         if (UserUtils.hasAdminRole()){
             if (userService.updateById(user)){
+                redisTemplate.delete("users");
                 return RespBean.success("更新成功",null);
             }else return RespBean.error(500,"更新失败");
         }
