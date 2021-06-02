@@ -28,4 +28,9 @@ public interface IAppointmentService extends IService<Appointment> {
      */
     RespBean orderLab(Appointment appointment);
 
+    /**
+     * 查询该教师剩余可约学分数
+     * @return
+     */
+    RespBean getSurplusPeriods(Long id);
 }

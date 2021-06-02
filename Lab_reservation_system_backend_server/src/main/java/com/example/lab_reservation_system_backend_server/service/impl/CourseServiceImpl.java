@@ -53,6 +53,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             course.setUid(UserUtils.getCurrentUser().getId());
             if (courseMapper.insert(course) > 0){
                 redisTemplate.delete("courses");
+                redisTemplate.delete("CoursesByTeacher:"+UserUtils.getCurrentUser().getId());
                 return RespBean.success("添加成功",null);
             }else {
                 course.setUid(null);

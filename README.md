@@ -61,3 +61,19 @@
 ### 2021/6/1
 1. 连接远程Linux服务器Redis，编写Redis配置类，配置key序列化类型为String序列化，配置value序列化类型为Jackson序列化。
 2. 重写各种获取信息的方法，加入缓存中间件，缓存信息列表，如果更改信息列表，则删除对应的缓存，下次拉取时再生成缓存。
+### 2021/6/2
+1. 修改缓存过期bug，当增删改实验课程时，未更新("CoursesByTeacher:"+UserUtils.getCurrentUser().getId()) 这个缓存，其实是忘记删除这个缓存了。
+2. 连接远程数据库，测试项目功能。
+3. 添加教师查询指定课程的剩余可选学时，保证教师可以每周都在不同的教室上实验，从而使得预约功能更灵活，更人性化。
+4. 在Redis序列化和反序列化 LocalDateTime 类型的对象时会报错，找不到它的类型，加上如下注解即可序列化成功。
+```java
+   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+   @JsonSerialize(using = LocalDateTimeSerializer.class)
+   @TableField(updateStrategy = FieldStrategy.NEVER)
+   private LocalDateTime createTime;
+
+   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+   @JsonSerialize(using = LocalDateTimeSerializer.class)
+   @TableField(updateStrategy = FieldStrategy.NEVER)
+   private LocalDateTime updateTime;
+```

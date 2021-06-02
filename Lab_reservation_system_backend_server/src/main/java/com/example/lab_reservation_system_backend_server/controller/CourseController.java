@@ -3,6 +3,7 @@ package com.example.lab_reservation_system_backend_server.controller;
 import com.example.lab_reservation_system_backend_server.pojo.Course;
 import com.example.lab_reservation_system_backend_server.pojo.RespBean;
 import com.example.lab_reservation_system_backend_server.service.ICourseService;
+import com.example.lab_reservation_system_backend_server.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class CourseController {
     public RespBean deleteCourse(@PathVariable Long id){
         if (courseService.removeById(id)){
             redisTemplate.delete("courses");
+            redisTemplate.delete("CoursesByTeacher:"+ UserUtils.getCurrentUser().getId());
             return RespBean.success("删除成功",null);
         }
         return RespBean.error(500,"删除失败");
@@ -66,6 +68,7 @@ public class CourseController {
     public RespBean updateCourse(@RequestBody Course course){
         if (courseService.updateById(course)){
             redisTemplate.delete("courses");
+            redisTemplate.delete("CoursesByTeacher:"+UserUtils.getCurrentUser().getId());
             return RespBean.success("修改成功",null);
         }
         return RespBean.error(500,"修改失败");

@@ -10,7 +10,7 @@ import com.example.lab_reservation_system_backend_server.pojo.ReservationTime;
 import com.example.lab_reservation_system_backend_server.pojo.RespBean;
 import com.example.lab_reservation_system_backend_server.service.IAppointmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.lab_reservation_system_backend_server.service.IReservationTime;
+import com.example.lab_reservation_system_backend_server.service.ICourseService;
 import com.example.lab_reservation_system_backend_server.util.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +40,8 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
     @Autowired
     private CourseMapper courseMapper;
     @Autowired
+    private ICourseService courseService;
+    @Autowired
     private ReservationTimeMapper reservationTimeMapper;
     @Autowired
     private RedisTemplate redisTemplate;
@@ -58,10 +60,15 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
         }
         if (!CollectionUtils.isEmpty(appointments)){
             appointments.forEach(appointment -> {
-                List<ReservationTime> reservationTimes = reservationTimeMapper.selectList(new QueryWrapper<ReservationTime>()
-                        .eq("uid",appointment.getUid())
-                        .eq("cid",appointment.getCid())
-                        .eq("lab_name",appointment.getLabName()));
+                List<ReservationTime>  reservationTimes = (List<ReservationTime>) valueOperations
+                        .get("reservationTimes:uid=" + appointment.getUid() + " cid=" + appointment.getCid() + " lab_name=" + appointment.getLabName());
+                if (CollectionUtils.isEmpty(reservationTimes)){
+                    reservationTimes = reservationTimeMapper.selectList(new QueryWrapper<ReservationTime>()
+                            .eq("uid",appointment.getUid())
+                            .eq("cid",appointment.getCid())
+                            .eq("lab_name",appointment.getLabName()));
+                    valueOperations.set("reservationTimes:uid=" + appointment.getUid() + " cid=" + appointment.getCid() + " lab_name=" + appointment.getLabName(),reservationTimes);
+                }
                 appointment.setReservationTimes(reservationTimes);
             });
             valueOperations.set("AppointmentsByLab:"+name,appointments);
@@ -97,9 +104,31 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
             );
             appointmentMapper.insert(appointment);
             redisTemplate.delete("AppointmentsByLab:"+appointment.getLabName());
+            redisTemplate.delete("Teacher:"+appointment.getUid()+" course:"+appointment.getCid()+"SurplusPeriods");
+            redisTemplate.delete("reservationTimes:uid=" + appointment.getUid() + " cid=" + appointment.getCid() + " lab_name=" + appointment.getLabName());
             return RespBean.success("预约成功",null);
         }catch (Exception e){
             return RespBean.error(500,"预约失败");
         }
+    }
+
+    /**
+     * 查询该教师剩余可约学分数
+     * @return
+     */
+    @Override
+    public RespBean getSurplusPeriods(Long id) {
+
+        Course course = (Course) courseService.getCourseById(id).getData();
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        Integer surplusPeriods = (Integer) valueOperations.get("Teacher:"+UserUtils.getCurrentUser().getId()+" course:"+id+"SurplusPeriods");
+        if (surplusPeriods == null){
+            List<ReservationTime> reservationTimes = reservationTimeMapper.selectList(new QueryWrapper<ReservationTime>()
+                    .eq("uid", UserUtils.getCurrentUser().getId())
+                    .eq("cid", id));
+            surplusPeriods = (course.getPeriods() - reservationTimes.size() * 2);
+            valueOperations.set("Teacher:"+UserUtils.getCurrentUser().getId()+" course:"+id+"SurplusPeriods",surplusPeriods);
+        }
+        return RespBean.success(null,surplusPeriods);
     }
 }

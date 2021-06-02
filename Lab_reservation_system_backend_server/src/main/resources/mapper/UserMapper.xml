@@ -21,8 +21,7 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id
-        , username, password, name
+        id, username, password, name
     </sql>
 
     <select id="getAllUsers" resultMap="UsersWithRole">

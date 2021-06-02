@@ -36,4 +36,10 @@ public class AppointmentController {
     public RespBean orderLab(@RequestBody Appointment appointment){
         return appointmentService.orderLab(appointment);
     }
+
+    @ApiOperation(value = "查询该教师剩余可约学分数")
+    @GetMapping("/periods/{id}")
+    public RespBean getSurplusPeriods(@PathVariable Long id){
+        return appointmentService.getSurplusPeriods(id);
+    }
 }
