@@ -2,9 +2,10 @@
 ***
 版本依赖：
 - JDK11
-- SpringBoot 2.4.5 MySQL 8.0.23
-- mybatis-plus 3.4.2 SpringSecurity 2.4.5
+- SpringBoot 2.4.5 MySQL 8.0.23 Redis 2.4.5
+- mybatis-plus 3.4.2 SpringSecurity 2.4.5 Spring
 - knife4j-spring-boot-starter 3.0.2 国人编写的漂亮的ui界面的Swagger
+- kaptcha 验证码 0.0.9
 ---
 ### 2021/5/12
 - 设计数据库表。
@@ -77,3 +78,9 @@
    @TableField(updateStrategy = FieldStrategy.NEVER)
    private LocalDateTime updateTime;
 ```
+5. 部署项目时发现bug：  Could not read JSON: Unrecognized field "enabled"。查阅资料发现只要是实体类中所有的有返回值的方法都会将返回的值序列化，但是反序列化时是根据set方法来实现的，所以当实体类中有非get，set方法的方法有返回值时，反序列化时就会出错。 由于整合了SpringSecurity所以实体类需要实现UserDetails接口，而那些属性则不能反序列化，所以在RedisConfig中加入一个配置。
+```java
+// 反序列化时遇到未知属性就忽略该属性。
+om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); 
+```
+6. 添加异常统一处理Controller
