@@ -2,7 +2,7 @@ spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/lab_reservation?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://114.116.213.241:3306/2018214201?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: 2018214201
     password: 2018214201
   jackson:
@@ -42,3 +42,5 @@ logging:
       example: debug
   pattern:
     console: '%-5level %C.%M[%line] - %msg%n'
+  file:
+    path: D:\workspace\Lab_reservation_system_backend\
