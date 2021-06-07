@@ -86,3 +86,5 @@ om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 6. 添加异常统一处理Controller
 ### 2021/6/6
 1. 引入aop包，添加日志切面，记录请求的地址，ip，类名.参数，参数信息。生成日志文件。
+### 2021/6/7
+1. 添加分页配置，完成对数据的分页处理。
