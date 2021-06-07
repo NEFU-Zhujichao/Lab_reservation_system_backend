@@ -92,12 +92,15 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
             List<ReservationTime> reservationTimes = reservationTimeMapper.selectList(new QueryWrapper<ReservationTime>()
                     .eq("uid", appointment.getUid())
                     .eq("cid", appointment.getCid()));
-            if(reservationTimes.size() >= (course.getPeriods() / 2)){
+            if((CollectionUtils.isEmpty(reservationTimes) && appointment.getReservationTimes().size() > course.getPeriods() / 2)
+                    || (reservationTimes.size() + appointment.getReservationTimes().size()) > (course.getPeriods() / 2)){
                 return RespBean.error(500,"已选实验学时已满，请联系教务处添加实验学时");
             }
             appointment.getReservationTimes().forEach(reservationTime -> {
                 reservationTime.setUid(UserUtils.getCurrentUser().getId());
+                reservationTime.setUname(UserUtils.getCurrentUser().getName());
                 reservationTime.setCid(course.getId());
+                reservationTime.setCname(course.getName());
                 reservationTime.setLabName(appointment.getLabName());
                 reservationTimeMapper.insert(reservationTime);
           }

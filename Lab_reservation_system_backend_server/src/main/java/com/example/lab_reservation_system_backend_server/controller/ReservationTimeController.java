@@ -21,7 +21,7 @@ public class ReservationTimeController {
     @GetMapping("/")
     public RespBean getReservationTimes(){
         if(reservationTime.list().size() > 0){
-            return RespBean.success("null",reservationTime.list());
+            return RespBean.success(null,reservationTime.list());
         }
         return RespBean.success("没有任何预约时间",null);
     }

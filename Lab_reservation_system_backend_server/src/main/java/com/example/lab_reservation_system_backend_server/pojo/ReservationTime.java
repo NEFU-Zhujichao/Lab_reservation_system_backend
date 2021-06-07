@@ -29,8 +29,14 @@ public class ReservationTime implements Serializable {
     @ApiModelProperty(value = "教师id")
     private Long uid;
 
+    @ApiModelProperty(value = "教师名字")
+    private String uname;
+
     @ApiModelProperty(value = "实验课程id")
     private Long cid;
+
+    @ApiModelProperty(value = "实验课程名字")
+    private String cname;
 
     @ApiModelProperty(value = "实验室名字")
     private String labName;

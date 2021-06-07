@@ -43,4 +43,4 @@ logging:
   pattern:
     console: '%-5level %C.%M[%line] - %msg%n'
   file:
-    path: /home/lab_reservation_system/lab_reservation_backend/logs
+    path: /home/lab_reservation_system/lab_reservation_backend/logs/
