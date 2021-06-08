@@ -3,7 +3,7 @@
 版本依赖：
 - JDK11
 - SpringBoot 2.4.5 MySQL 8.0.23 Redis 2.4.5
-- mybatis-plus 3.4.2 SpringSecurity 2.4.5 Spring
+- mybatis-plus 3.4.2 SpringSecurity 2.4.5 jjwt 0.9.1
 - knife4j-spring-boot-starter 3.0.2 国人编写的漂亮的ui界面的Swagger
 - kaptcha 验证码 0.0.9
 ---
