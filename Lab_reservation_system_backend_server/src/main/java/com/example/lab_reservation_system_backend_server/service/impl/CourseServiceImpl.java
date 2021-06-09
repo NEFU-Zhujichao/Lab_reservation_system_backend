@@ -50,6 +50,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public RespBean addCourse(Course course) {
         try {
+            if ((course.getName() == null || course.getName().equals(' ')) || (course.getStudentNumber() == null || course.getStudentNumber().equals(' ')) || (course.getPeriods() == null || course.getPeriods().equals(' '))) {
+                return RespBean.error(400,"请完整填写课程信息，并且不要使用空格");
+            }
             course.setUid(UserUtils.getCurrentUser().getId());
             if (courseMapper.insert(course) > 0){
                 redisTemplate.delete("courses");
@@ -104,7 +107,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         if (!CollectionUtils.isEmpty(teacherDTOS)){
             valueOperations.set("courses",teacherDTOS);
-            return RespBean.success("查询成功",teacherDTOS);
+            return RespBean.success(null,teacherDTOS);
         }
         return RespBean.error(500,"查询失败");
     }

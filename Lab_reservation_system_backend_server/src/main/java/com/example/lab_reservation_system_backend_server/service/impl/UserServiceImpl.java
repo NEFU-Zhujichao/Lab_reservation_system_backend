@@ -125,6 +125,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public RespBean addUser(User user) {
         try {
+            if (CollectionUtils.isEmpty(user.getRoles()) || (user.getUsername() == null || user.getUsername().equals(" "))){
+                return RespBean.error(400,"请完善用户信息并且不要使用空格作为用户名");
+            }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userMapper.insert(user);
             user.getRoles().forEach(role -> {
