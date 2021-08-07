@@ -128,6 +128,11 @@ public class JwtTokenUtil {
         return !isTokenExpired(token);
     }
 
+    /**
+     * 刷新token
+     * @param token
+     * @return
+     */
     public String refreshToken(String token){
         Claims claims = getClaimsFromToken(token);
         claims.put(CLAIM_KEY_CREATED,new Date());

@@ -1,6 +1,5 @@
 package com.example.lab_reservation_system_backend_server.config;
 
-import com.example.lab_reservation_system_backend_server.pojo.User;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;

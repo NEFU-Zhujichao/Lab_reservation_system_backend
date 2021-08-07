@@ -2,7 +2,7 @@
 实验室管理系统SQL文件
 **/
 CREATE SCHEMA `lab_reservation` ;
-use `2018214201`;
+use `lab_reservation`;
 
 create table appointment
 (
